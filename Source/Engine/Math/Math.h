@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <cmath>
 
 namespace errera {
 	namespace math {
@@ -24,5 +25,11 @@ namespace errera {
 		using std::min;
 		using std::max;
 		using std::clamp;
+		using std::sqrt;
+		using std::sqrtf;
+		using std::sin;
+		using std::sinf;
+		using std::cos;
+		using std::cosf;
 	}
 }
