@@ -35,6 +35,11 @@ namespace errera {
 		Vector2& operator /= (float s) { x /= s; y /= s; return *this; }
 
 		//square root (x * x + y * y)
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		float LengthSquare() const { return (x * x) + (y * y); }
 		float Length() const { return errera::math::sqrtf(LengthSquare()); }
 	};

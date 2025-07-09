@@ -1,17 +1,22 @@
-#include <SDL3/SDL.h>
-#include <Core/Random.h>
+#include "Core/Random.h"
 #include "Core/Time.h"
 #include "Renderer/Renderer.h"
 #include "Math/Vector2.h"
+#include "Input/InputSystem.h"
+
+#include <SDL3/SDL.h>
 #include <iostream>
 #include <vector>
 
 int main(int argc, char* argv[]) {
     errera::Renderer renderer;
     errera::Time time;
+    errera::InputSystem input;
 
     renderer.Initialize();
 	renderer.CreateWindow("ERRERA Engine", 1280, 1024);
+
+    input.Initialize();
 
     SDL_Event e;
     bool quit = false;
@@ -29,7 +34,19 @@ int main(int argc, char* argv[]) {
             if (e.type == SDL_EVENT_QUIT) {
                 quit = true;
             }
-        }  
+        }
+
+        input.Update();
+        if (input.GetKeyPressed(SDL_SCANCODE_A)) {
+            std::cout << "Pressed\n";
+        }
+
+        if (input.GetMouseButtonDown(0)) {
+            std::cout << "Mouse Button Pressed\n";
+        }
+
+        errera::vec2 mouse = input.GetMousePosition();
+        std::cout << mouse.x << ", " << mouse.y << std::endl;
 
 		renderer.Clear(); // Clear the screen with black
 
@@ -45,18 +62,6 @@ int main(int argc, char* argv[]) {
             renderer.SetColor(errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256));
             renderer.DrawPoint(star.x, star.y);
         }
-
-		/*for (int i = 0; i < 100; i++) {
-            renderer.SetColor(errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256));
-			
-            renderer.DrawPoint(errera::random::getRandomFloat() * 1280, errera::random::getRandomFloat() * 1024);
-
-            renderer.SetColor(errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256));
-
-			renderer.DrawPoint(v.x, v.y);
-            
-            renderer.DrawLine(errera::random::getRandomFloat() * 1280, errera::random::getRandomFloat() * 1024, errera::random::getRandomFloat() * 1280, errera::random::getRandomFloat() * 1024);
-		}*/
 
         renderer.Present();
     }
