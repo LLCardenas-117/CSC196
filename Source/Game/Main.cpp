@@ -4,6 +4,7 @@
 #include "Math/Vector2.h"
 #include "Input/InputSystem.h"
 
+#include <fmod.hpp>
 #include <SDL3/SDL.h>
 #include <iostream>
 #include <vector>
@@ -13,6 +14,8 @@ int main(int argc, char* argv[]) {
     errera::Renderer renderer;
     errera::Time time;
     errera::InputSystem input;
+    FMOD::System* audio;
+
 
     renderer.Initialize();
 	renderer.CreateWindow("ERRERA Engine", 1280, 1024);
@@ -20,13 +23,29 @@ int main(int argc, char* argv[]) {
     input.Initialize();
 
     // Audio Systems
+    FMOD::System_Create(&audio);
+    FMOD::Sound* sound = nullptr;
+
+    void* extradriverdata = nullptr;
+    audio->init(32, FMOD_INIT_NORMAL, extradriverdata);
+
+    //Creates audio in the code and adds it to a vector
+    std::vector<FMOD::Sound*> sounds;
+    audio->createSound("bass.wav", FMOD_DEFAULT, 0, &sound);
+    sounds.push_back(sound);
+
+    audio->createSound("snare.wav", FMOD_DEFAULT, 0, &sound);
+    sounds.push_back(sound);
+    
+    audio->createSound("open-hat.wav", FMOD_DEFAULT, 0, &sound);
+    sounds.push_back(sound);
 
     SDL_Event e;
     bool quit = false;
 
 	std::vector<errera::vec2> stars;
 
-    // Create Sarst
+    // Create Stars
     for (int i = 0; i < 100; i++) {
         stars.push_back(errera::vec2{ errera::random::getRandomFloat() * 1280, errera::random::getRandomFloat() * 1024 });
     }
@@ -44,6 +63,7 @@ int main(int argc, char* argv[]) {
 
         // Update Engine Systems
         input.Update();
+        audio->update();
 
         // Get Input
         /*if (input.GetKeyPressed(SDL_SCANCODE_A)) {
@@ -58,6 +78,21 @@ int main(int argc, char* argv[]) {
             errera::vec2 position = input.GetMousePosition();
             if (points.empty()) points.push_back(position);
             else if ((position - points.back()).Length() > 10) points.push_back(position);
+        }
+
+        if (input.GetKeyDown(SDL_SCANCODE_Q) && !input.GetPrevKeyDown(SDL_SCANCODE_Q))
+        {
+            audio->playSound(sounds[0], 0, false, nullptr);
+        }
+
+        if (input.GetKeyDown(SDL_SCANCODE_W) && !input.GetPrevKeyDown(SDL_SCANCODE_W))
+        {
+            audio->playSound(sounds[1], 0, false, nullptr);
+        }
+
+        if (input.GetKeyDown(SDL_SCANCODE_E) && !input.GetPrevKeyDown(SDL_SCANCODE_E))
+        {
+            audio->playSound(sounds[2], 0, false, nullptr);
         }
 
         /*errera::vec2 mouse = input.GetMousePosition();
