@@ -37,8 +37,8 @@ void errera::InputSystem::Update()
 	_prevMouseButtonState = _mouseButtonState;
 	uint32_t mouseButtonState = SDL_GetMouseState(&_mousePosition.x, &_mousePosition.y);
 
-	_mouseButtonState[0] = mouseButtonState & SDL_BUTTON_LMASK;
-	_mouseButtonState[1] = mouseButtonState & SDL_BUTTON_MMASK;
-	_mouseButtonState[2] = mouseButtonState & SDL_BUTTON_RMASK;
+	_mouseButtonState[static_cast<uint8_t>(MouseButton::LEFT)] = mouseButtonState & SDL_BUTTON_LMASK;
+	_mouseButtonState[static_cast<uint8_t>(MouseButton::MIDDLE)] = mouseButtonState & SDL_BUTTON_MMASK;
+	_mouseButtonState[static_cast<uint8_t>(MouseButton::RIGHT)] = mouseButtonState & SDL_BUTTON_RMASK;
 
 }

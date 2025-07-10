@@ -6,6 +6,13 @@
 namespace errera {
 	class InputSystem {
 	public:
+		enum class MouseButton : uint8_t {
+			LEFT,
+			MIDDLE,
+			RIGHT
+		};
+
+	public:
 		InputSystem() = default;
 
 		bool Initialize();
@@ -21,10 +28,10 @@ namespace errera {
 		bool GetKeyReleased(uint8_t key) const { return _prevKeyboardState[key] && !_keyboardState[key]; }
 
 		//MOUSE INPUT
-		bool GetMouseButtonDown(uint8_t button) { assert(button < 3); return _mouseButtonState[button]; }
-		bool GetPrevMouseButtonDown(uint8_t button) { assert(button < 3); return _prevMouseButtonState[button]; }
-		bool GetMouseButtonPressed(uint8_t button) { assert(button < 3); return !_prevMouseButtonState[button] && _mouseButtonState[button]; }
-		bool GetMouseButtonReleased(uint8_t button) { assert(button < 3); return _prevMouseButtonState[button] && !_mouseButtonState[button]; }
+		bool GetMouseButtonDown(MouseButton button) { return _mouseButtonState[static_cast<uint8_t>(button)]; }
+		bool GetPrevMouseButtonDown(MouseButton button) { return _prevMouseButtonState[static_cast<uint8_t>(button)]; }
+		bool GetMouseButtonPressed(MouseButton button) { return !_prevMouseButtonState[static_cast<uint8_t>(button)] && _mouseButtonState[static_cast<uint8_t>(button)]; }
+		bool GetMouseButtonReleased(MouseButton button) { return _prevMouseButtonState[static_cast<uint8_t>(button)] && !_mouseButtonState[static_cast<uint8_t>(button)]; }
 
 		const vec2& GetMousePosition() const { return _mousePosition; }
 		const vec2& GetPrevMousePosition() const { return _PrevMousePosition; }

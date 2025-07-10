@@ -36,10 +36,6 @@ namespace errera {
 
 		//square root (x * x + y * y)
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
 		float LengthSquare() const { return (x * x) + (y * y); }
 		float Length() const { return errera::math::sqrtf(LengthSquare()); }
 	};
