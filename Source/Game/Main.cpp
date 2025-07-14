@@ -1,11 +1,10 @@
+#include "Audio/AudioSystem.h"
 #include "Core/Random.h"
 #include "Core/Time.h"
-#include "Renderer/Renderer.h"
-#include "Math/Vector2.h"
 #include "Input/InputSystem.h"
+#include "Math/Vector2.h"
+#include "Renderer/Renderer.h"
 
-#include <fmod.hpp>
-#include <SDL3/SDL.h>
 #include <iostream>
 #include <vector>
 
@@ -14,7 +13,7 @@ int main(int argc, char* argv[]) {
     errera::Renderer renderer;
     errera::Time time;
     errera::InputSystem input;
-    FMOD::System* audio;
+    errera::AudioSystem audio;
 
 
     renderer.Initialize();
@@ -22,23 +21,17 @@ int main(int argc, char* argv[]) {
 
     input.Initialize();
 
-    // Audio Systems
-    FMOD::System_Create(&audio);
-    FMOD::Sound* sound = nullptr;
+    audio.Init();
 
-    void* extradriverdata = nullptr;
-    audio->init(32, FMOD_INIT_NORMAL, extradriverdata);
+    // Audio Systems
 
     //Creates audio in the code and adds it to a vector
-    std::vector<FMOD::Sound*> sounds;
-    audio->createSound("bass.wav", FMOD_DEFAULT, 0, &sound);
-    sounds.push_back(sound);
-
-    audio->createSound("snare.wav", FMOD_DEFAULT, 0, &sound);
-    sounds.push_back(sound);
-    
-    audio->createSound("open-hat.wav", FMOD_DEFAULT, 0, &sound);
-    sounds.push_back(sound);
+    audio.AddSound("bass.wav", "bass");
+    audio.AddSound("snare.wav", "snare");
+    audio.AddSound("open-hat.wav", "open-hat");
+    audio.AddSound("close-hat.wav", "close-hat");
+    audio.AddSound("clap.wav", "clap");
+    audio.AddSound("cowbell.wav", "cowbell");
 
     SDL_Event e;
     bool quit = false;
@@ -63,7 +56,7 @@ int main(int argc, char* argv[]) {
 
         // Update Engine Systems
         input.Update();
-        audio->update();
+        audio.Update();
 
         // Get Input
         /*if (input.GetKeyPressed(SDL_SCANCODE_A)) {
@@ -80,20 +73,12 @@ int main(int argc, char* argv[]) {
             else if ((position - points.back()).Length() > 10) points.push_back(position);
         }
 
-        if (input.GetKeyDown(SDL_SCANCODE_Q) && !input.GetPrevKeyDown(SDL_SCANCODE_Q))
-        {
-            audio->playSound(sounds[0], 0, false, nullptr);
-        }
-
-        if (input.GetKeyDown(SDL_SCANCODE_W) && !input.GetPrevKeyDown(SDL_SCANCODE_W))
-        {
-            audio->playSound(sounds[1], 0, false, nullptr);
-        }
-
-        if (input.GetKeyDown(SDL_SCANCODE_E) && !input.GetPrevKeyDown(SDL_SCANCODE_E))
-        {
-            audio->playSound(sounds[2], 0, false, nullptr);
-        }
+        if (input.GetKeyDown(SDL_SCANCODE_Q) && !input.GetPrevKeyDown(SDL_SCANCODE_Q)) { audio.PlaySound("bass"); }
+        if (input.GetKeyDown(SDL_SCANCODE_W) && !input.GetPrevKeyDown(SDL_SCANCODE_W)) { audio.PlaySound("snare"); }
+        if (input.GetKeyDown(SDL_SCANCODE_A) && !input.GetPrevKeyDown(SDL_SCANCODE_A)) { audio.PlaySound("open-hat"); }
+        if (input.GetKeyDown(SDL_SCANCODE_S) && !input.GetPrevKeyDown(SDL_SCANCODE_S)) { audio.PlaySound("close-hat"); }
+        if (input.GetKeyDown(SDL_SCANCODE_D) && !input.GetPrevKeyDown(SDL_SCANCODE_D)) { audio.PlaySound("clap"); }
+        if (input.GetKeyDown(SDL_SCANCODE_E) && !input.GetPrevKeyDown(SDL_SCANCODE_E)) { audio.PlaySound("cowbell"); }
 
         /*errera::vec2 mouse = input.GetMousePosition();
         std::cout << mouse.x << ", " << mouse.y << std::endl;*/
@@ -112,6 +97,7 @@ int main(int argc, char* argv[]) {
     }
 
 	renderer.Shutdown();
+    audio.Shutdown();
 
     return 0;
 }
