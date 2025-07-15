@@ -47,7 +47,65 @@ int main(int argc, char* argv[]) {
         {-5, -5}
     };
 
-    errera::Model model{ points, {0, 0, 1} };
+    std::vector<errera::vec2> shipPoints{
+        { 1, -18 },
+        { 3, -14 },
+        { 3, -13 },
+        { 4, -13 },
+        { 5, -11 },
+        { 8, -11 },
+        { 13, -9 },
+        { 13, -7 },
+        { 12, -6 },
+        { 8, -5 },
+        { 8, -4 },
+        { 7, -0 },
+        { 5, -0 },
+        { 5, -7 },
+        { 5, -6 },
+        { 4, -3 },
+        { 4, -1 },
+        { 3, 2 },
+        { 6, 9 },
+        { 7, 10 },
+        { 7, 20 },
+        { 4, 20 },
+        { 3, 19 },
+        { 3, 11 },
+        { 2, 14 },
+        { 2, 16 },
+        { 1, 18 },
+        { -1, 18 },
+        { -2, 16 },
+        { -2, 14 },
+        { -3, 11 },
+        { -3, 19 },
+        { -4, 20 },
+        { -7, 20 },
+        { -7, 10 },
+        { -6, 9 },
+        { -3, 2 },
+        { -4, -1 },
+        { -4, -3 },
+        { -5, -6 },
+        { -5, -7 },
+        { -5, -0 },
+        { -7, -0 },
+        { -8, -5 },
+        { -12, -6 },
+        { -13, -7 },
+        { -13, -9 },
+        { -8, -11 },
+        { -5, -11 },
+        { -4, -13 },
+        { -3, -13 },
+        { -3, -14 },
+        { -1, -18 },
+        { 1, -18 }
+    };
+
+    //errera::Model model{ points, {0, 0, 1} };
+    errera::Model model{ shipPoints, {0, 1, 0} };
 
     // Audio Systems
 
@@ -117,7 +175,7 @@ int main(int argc, char* argv[]) {
         renderer.SetColor(color.r, color.g, color.b);
 		renderer.Clear(); // Clear the screen with black
 
-        model.Draw(renderer, input.GetMousePosition(), time.GetTime(), 10.0f);
+        model.Draw(renderer, input.GetMousePosition(), 0.0f, 10.0f);
         
         for (int i = 0; i < (int)points.size() - 1; i++) {
             renderer.SetColor((uint8_t)errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256));
