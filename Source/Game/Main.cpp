@@ -3,12 +3,28 @@
 #include "Core/Time.h"
 #include "Input/InputSystem.h"
 #include "Math/Vector2.h"
+#include "Math/Vector3.h"
+#include "Renderer/Model.h"
 #include "Renderer/Renderer.h"
 
 #include <iostream>
 #include <vector>
 
 int main(int argc, char* argv[]) {
+    union data_t {
+        bool b;
+        int i;
+        double d;
+    };
+
+    data_t data;
+    data.b = true;
+
+    std::cout << data.b << std::endl;
+    data.i = 400;
+    std::cout << data.i << std::endl;
+    std::cout << data.b << std::endl;
+
     // Initialize Engine Systems
     errera::Renderer renderer;
     errera::Time time;
@@ -21,7 +37,17 @@ int main(int argc, char* argv[]) {
 
     input.Initialize();
 
-    audio.Init();
+    audio.Initialize();
+
+    std::vector<errera::vec2> points {
+        {-5, -5},
+        { 5, -5},
+        { 5, 5 },
+        {-5, 5 },
+        {-5, -5}
+    };
+
+    errera::Model model{ points, {0, 0, 1} };
 
     // Audio Systems
 
@@ -43,7 +69,7 @@ int main(int argc, char* argv[]) {
         stars.push_back(errera::vec2{ errera::random::getRandomFloat() * 1280, errera::random::getRandomFloat() * 1024 });
     }
 
-    std::vector<errera::vec2> points;
+    //std::vector<errera::vec2> points;
 
     // MAIN LOOP
     while (!quit) {
@@ -53,6 +79,8 @@ int main(int argc, char* argv[]) {
                 quit = true;
             }
         }
+
+        if (input.GetKeyPressed(SDL_SCANCODE_ESCAPE)) quit = true;
 
         // Update Engine Systems
         input.Update();
@@ -84,12 +112,15 @@ int main(int argc, char* argv[]) {
         std::cout << mouse.x << ", " << mouse.y << std::endl;*/
 
         // Draw
-        renderer.SetColor(0, 0, 0, 0);
+        errera::vec3 color{ 0, 0, 0 };
+
+        renderer.SetColor(color.r, color.g, color.b);
 		renderer.Clear(); // Clear the screen with black
+
+        model.Draw(renderer, input.GetMousePosition(), time.GetTime(), 10.0f);
         
         for (int i = 0; i < (int)points.size() - 1; i++) {
-            renderer.SetColor(errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256));
-            renderer.SetColor(errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256));
+            renderer.SetColor((uint8_t)errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256));
             renderer.DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
         }
 

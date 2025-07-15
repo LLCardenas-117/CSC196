@@ -41,6 +41,10 @@ namespace errera
 	    SDL_SetRenderDrawColor(_renderer, r, g, b, a);
     }
 
+    void Renderer::SetColor(float r, float g, float b, float a) {
+        SDL_SetRenderDrawColorFloat(_renderer, r, g, b, a);
+    }
+
     void Renderer::Clear() {
 	    SDL_RenderClear(_renderer);
     }

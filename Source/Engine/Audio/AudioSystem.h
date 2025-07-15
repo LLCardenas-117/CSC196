@@ -9,7 +9,7 @@ namespace errera {
 	public:
 		AudioSystem() = default;
 
-		bool Init();
+		bool Initialize();
 
 		void Shutdown();
 

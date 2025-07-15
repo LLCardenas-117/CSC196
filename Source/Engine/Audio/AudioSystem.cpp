@@ -22,7 +22,7 @@ namespace errera {
     /// 
     /// </summary>
     /// <returns></returns>
-    bool AudioSystem::Init() {
+    bool AudioSystem::Initialize() {
         FMOD_RESULT result = FMOD::System_Create(&_system);
 
         if (!CheckFMODResult(result)) return false;

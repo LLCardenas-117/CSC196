@@ -6,7 +6,10 @@ namespace errera {
 	template<typename T>
 
 	struct Vector2 {
-		T x, y;
+		union {
+			struct { T x, y; };
+			struct { T u, v; };
+		};
 
 		Vector2() = default;
 		Vector2(T x, T y) : x{ x }, y{ y } {}
@@ -36,8 +39,43 @@ namespace errera {
 
 		//square root (x * x + y * y)
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		float LengthSquare() const { return (x * x) + (y * y); }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		float Length() const { return errera::math::sqrtf(LengthSquare()); }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		Vector2 Normalized() const { return *this / Length(); }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		float Angle() const { return errera::math::atan2f(y, x); };
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="radians"></param>
+		/// <returns></returns>
+		Vector2 Rotate(float radians) const {
+			Vector2 v;
+
+			v.x = x * errera::math::cosf(radians) - y * errera::math::sinf(radians);
+			v.y = x * errera::math::sinf(radians) + y * errera::math::cosf(radians);
+
+			return v;
+		}
 	};
 
 	using ivec2 = Vector2<int>;
