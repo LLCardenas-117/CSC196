@@ -20,5 +20,14 @@ namespace errera {
 			renderer.DrawLine(p1.x, p1.y, p2.x, p2.y);
 		}
 	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="renderer"></param>
+	/// <param name="transform"></param>
+	void Model::Draw(Renderer& renderer, const Transform& transform) {
+		Draw(renderer, transform.position, transform.rotation, transform.scale);
+	}
 }
 

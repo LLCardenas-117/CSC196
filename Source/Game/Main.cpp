@@ -1,7 +1,8 @@
-#include "Audio/AudioSystem.h"
 #include "Core/Random.h"
 #include "Core/Time.h"
+#include "Game/Actor.h"
 #include "Input/InputSystem.h"
+#include "Math/Transform.h"
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
 #include "Renderer/Model.h"
@@ -11,41 +12,17 @@
 #include <vector>
 
 int main(int argc, char* argv[]) {
-    union data_t {
-        bool b;
-        int i;
-        double d;
-    };
-
-    data_t data;
-    data.b = true;
-
-    std::cout << data.b << std::endl;
-    data.i = 400;
-    std::cout << data.i << std::endl;
-    std::cout << data.b << std::endl;
 
     // Initialize Engine Systems
     errera::Renderer renderer;
     errera::Time time;
     errera::InputSystem input;
-    errera::AudioSystem audio;
 
 
     renderer.Initialize();
 	renderer.CreateWindow("ERRERA Engine", 1280, 1024);
 
     input.Initialize();
-
-    audio.Initialize();
-
-    std::vector<errera::vec2> points {
-        {-5, -5},
-        { 5, -5},
-        { 5, 5 },
-        {-5, 5 },
-        {-5, -5}
-    };
 
     std::vector<errera::vec2> shipPoints{
         { 1, -18 },
@@ -105,29 +82,18 @@ int main(int argc, char* argv[]) {
     };
 
     //errera::Model model{ points, {0, 0, 1} };
-    errera::Model model{ shipPoints, {0, 1, 0} };
+    errera::Model* model = new errera::Model{ shipPoints, {0, 1, 0} };
 
-    // Audio Systems
+    std::vector<errera::Actor> actors;
+    for (int i = 0; i < 10; i++) {
+        errera::Transform transform{ errera::vec2{errera::random::getRandomFloat() * 1280, errera::random::getRandomFloat() * 1024}, 0, 2 };
+        errera::Actor actor{ transform, model };
+        actors.push_back(actor);
+    }
 
-    //Creates audio in the code and adds it to a vector
-    audio.AddSound("bass.wav", "bass");
-    audio.AddSound("snare.wav", "snare");
-    audio.AddSound("open-hat.wav", "open-hat");
-    audio.AddSound("close-hat.wav", "close-hat");
-    audio.AddSound("clap.wav", "clap");
-    audio.AddSound("cowbell.wav", "cowbell");
 
     SDL_Event e;
     bool quit = false;
-
-	std::vector<errera::vec2> stars;
-
-    // Create Stars
-    for (int i = 0; i < 100; i++) {
-        stars.push_back(errera::vec2{ errera::random::getRandomFloat() * 1280, errera::random::getRandomFloat() * 1024 });
-    }
-
-    //std::vector<errera::vec2> points;
 
     // MAIN LOOP
     while (!quit) {
@@ -142,32 +108,26 @@ int main(int argc, char* argv[]) {
 
         // Update Engine Systems
         input.Update();
-        audio.Update();
 
         // Get Input
-        /*if (input.GetKeyPressed(SDL_SCANCODE_A)) {
-            std::cout << "Pressed\n";
-        }*/
 
-        if (input.GetMouseButtonPressed(errera::InputSystem::MouseButton::LEFT)) {
-            points.push_back(input.GetMousePosition());
+        //if (input.GetKeyDown(SDL_SCANCODE_A)) transform.rotation -= errera::math::degToRad(90 * time.GetDeltaTime());
+        //if (input.GetKeyDown(SDL_SCANCODE_D)) transform.rotation += errera::math::degToRad(90 * time.GetDeltaTime());
+
+        float speed = 200;
+        errera::vec2 direction{ 0,0 };
+
+        if (input.GetKeyDown(SDL_SCANCODE_W)) direction.y = -1; //100 * time.GetDeltaTime();
+        if (input.GetKeyDown(SDL_SCANCODE_S)) direction.y = 1; //100 * time.GetDeltaTime();
+        if (input.GetKeyDown(SDL_SCANCODE_A)) direction.x = -1; //100 * time.GetDeltaTime();
+        if (input.GetKeyDown(SDL_SCANCODE_D)) direction.x = 1; //100 * time.GetDeltaTime();
+
+        if (direction.LengthSquare() > 0) {
+            direction = direction.Normalized();
+            for (auto& actor : actors) {
+                actor.GetTransform().position += (direction * speed) * time.GetDeltaTime();
+            }
         }
-        
-        if (input.GetMouseButtonDown(errera::InputSystem::MouseButton::LEFT)) {
-            errera::vec2 position = input.GetMousePosition();
-            if (points.empty()) points.push_back(position);
-            else if ((position - points.back()).Length() > 10) points.push_back(position);
-        }
-
-        if (input.GetKeyDown(SDL_SCANCODE_Q) && !input.GetPrevKeyDown(SDL_SCANCODE_Q)) { audio.PlaySound("bass"); }
-        if (input.GetKeyDown(SDL_SCANCODE_W) && !input.GetPrevKeyDown(SDL_SCANCODE_W)) { audio.PlaySound("snare"); }
-        if (input.GetKeyDown(SDL_SCANCODE_A) && !input.GetPrevKeyDown(SDL_SCANCODE_A)) { audio.PlaySound("open-hat"); }
-        if (input.GetKeyDown(SDL_SCANCODE_S) && !input.GetPrevKeyDown(SDL_SCANCODE_S)) { audio.PlaySound("close-hat"); }
-        if (input.GetKeyDown(SDL_SCANCODE_D) && !input.GetPrevKeyDown(SDL_SCANCODE_D)) { audio.PlaySound("clap"); }
-        if (input.GetKeyDown(SDL_SCANCODE_E) && !input.GetPrevKeyDown(SDL_SCANCODE_E)) { audio.PlaySound("cowbell"); }
-
-        /*errera::vec2 mouse = input.GetMousePosition();
-        std::cout << mouse.x << ", " << mouse.y << std::endl;*/
 
         // Draw
         errera::vec3 color{ 0, 0, 0 };
@@ -175,18 +135,14 @@ int main(int argc, char* argv[]) {
         renderer.SetColor(color.r, color.g, color.b);
 		renderer.Clear(); // Clear the screen with black
 
-        model.Draw(renderer, input.GetMousePosition(), 0.0f, 10.0f);
-        
-        for (int i = 0; i < (int)points.size() - 1; i++) {
-            renderer.SetColor((uint8_t)errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256), errera::random::getRandomInt(256));
-            renderer.DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+        for (auto& actor : actors) {
+            actor.Draw(renderer);
         }
 
         renderer.Present();
     }
 
 	renderer.Shutdown();
-    audio.Shutdown();
 
     return 0;
 }
