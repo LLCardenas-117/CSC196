@@ -1,6 +1,7 @@
 #include "Core/Random.h"
 #include "Core/Time.h"
-#include "Game/Actor.h"
+#include "Framework/Actor.h"
+#include "Framework/Scene.h"
 #include "Input/InputSystem.h"
 #include "Math/Transform.h"
 #include "Math/Vector2.h"
@@ -8,21 +9,25 @@
 #include "Renderer/Model.h"
 #include "Renderer/Renderer.h"
 
+#include "Game/Player.h"
+
 #include <iostream>
 #include <vector>
+#include <memory>
 
 int main(int argc, char* argv[]) {
 
     // Initialize Engine Systems
-    errera::Renderer renderer;
+    std::unique_ptr<errera::Renderer> renderer = std::make_unique<errera::Renderer>();
     errera::Time time;
-    errera::InputSystem input;
+    //std::unique_ptr<errera::AudioSystem> audio = std::make_unique<errera::AudioSystem>();
+    std::unique_ptr<errera::InputSystem> input = std::make_unique<errera::InputSystem>();
+    errera::Scene scene;
 
+    renderer->Initialize();
+	renderer->CreateWindow("ERRERA Engine", 1280, 1024);
 
-    renderer.Initialize();
-	renderer.CreateWindow("ERRERA Engine", 1280, 1024);
-
-    input.Initialize();
+    input->Initialize();
 
     std::vector<errera::vec2> shipPoints{
         { 1, -18 },
@@ -81,16 +86,13 @@ int main(int argc, char* argv[]) {
         { 1, -18 }
     };
 
-    //errera::Model model{ points, {0, 0, 1} };
-    errera::Model* model = new errera::Model{ shipPoints, {0, 1, 0} };
+    std::shared_ptr<errera::Model> model = std::make_shared<errera::Model>(shipPoints, errera::vec3{ 0, 1, 0 });
 
-    std::vector<errera::Actor> actors;
     for (int i = 0; i < 10; i++) {
         errera::Transform transform{ errera::vec2{errera::random::getRandomFloat() * 1280, errera::random::getRandomFloat() * 1024}, 0, 2 };
-        errera::Actor actor{ transform, model };
-        actors.push_back(actor);
+        std::unique_ptr<Player> player = std::make_unique<Player>( transform, model);
+        scene.AddActor(std::move(player));
     }
-
 
     SDL_Event e;
     bool quit = false;
@@ -104,10 +106,10 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        if (input.GetKeyPressed(SDL_SCANCODE_ESCAPE)) quit = true;
+        if (input->GetKeyPressed(SDL_SCANCODE_ESCAPE)) quit = true;
 
         // Update Engine Systems
-        input.Update();
+        input->Update();
 
         // Get Input
 
@@ -117,32 +119,31 @@ int main(int argc, char* argv[]) {
         float speed = 200;
         errera::vec2 direction{ 0,0 };
 
-        if (input.GetKeyDown(SDL_SCANCODE_W)) direction.y = -1; //100 * time.GetDeltaTime();
-        if (input.GetKeyDown(SDL_SCANCODE_S)) direction.y = 1; //100 * time.GetDeltaTime();
-        if (input.GetKeyDown(SDL_SCANCODE_A)) direction.x = -1; //100 * time.GetDeltaTime();
-        if (input.GetKeyDown(SDL_SCANCODE_D)) direction.x = 1; //100 * time.GetDeltaTime();
+        if (input->GetKeyDown(SDL_SCANCODE_W)) direction.y = -1; //100 * time.GetDeltaTime();
+        if (input->GetKeyDown(SDL_SCANCODE_S)) direction.y = 1; //100 * time.GetDeltaTime();
+        if (input->GetKeyDown(SDL_SCANCODE_A)) direction.x = -1; //100 * time.GetDeltaTime();
+        if (input->GetKeyDown(SDL_SCANCODE_D)) direction.x = 1; //100 * time.GetDeltaTime();
 
         if (direction.LengthSquare() > 0) {
             direction = direction.Normalized();
-            for (auto& actor : actors) {
-                actor.GetTransform().position += (direction * speed) * time.GetDeltaTime();
-            }
+            /*for (auto& player : actors) {
+                player->GetTransform().position += (direction * speed) * time.GetDeltaTime();
+            }*/
         }
 
         // Draw
         errera::vec3 color{ 0, 0, 0 };
 
-        renderer.SetColor(color.r, color.g, color.b);
-		renderer.Clear(); // Clear the screen with black
+        renderer->SetColor(color.r, color.g, color.b);
+		renderer->Clear(); // Clear the screen with black
 
-        for (auto& actor : actors) {
-            actor.Draw(renderer);
-        }
+        scene.Draw(*renderer);
 
-        renderer.Present();
+        renderer->Present();
     }
 
-	renderer.Shutdown();
+	renderer->Shutdown();
+    input->Shutdown();
 
     return 0;
 }

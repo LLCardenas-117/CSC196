@@ -1,11 +1,13 @@
 #pragma once
 #include "../Math/Transform.h"
 
+#include <memory>
+
 namespace errera {
 	class Actor {
 	public:
 		Actor() = default;
-		Actor(const Transform& transform, class Model* model) :
+		Actor(const Transform& transform, std::shared_ptr<class Model> model) :
 			_transform{transform},
 			_model{model}
 		{}
@@ -17,6 +19,6 @@ namespace errera {
 
 	protected:
 		Transform _transform;
-		Model* _model;
+		std::shared_ptr<Model> _model;
 	};
 }
