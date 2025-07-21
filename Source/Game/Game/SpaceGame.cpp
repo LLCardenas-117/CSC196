@@ -4,7 +4,9 @@
 #include "Framework/Scene.h"
 #include "Math/Vector2.h"
 #include "Player.h"
+#include "Renderer/Font.h"
 #include "Renderer/Model.h"
+#include "Renderer/Text.h"
 #include "Engine.h"
 
 #include <vector>
@@ -77,6 +79,14 @@ bool SpaceGame::Initialize() {
         _scene->AddActor(std::move(player));
     }
 
+    // FONT CREATION
+    /*std::unique_ptr<errera::Font> font = std::make_unique<errera::Font>();
+    font->Load("ArcadeClassic.ttf", 20);*/
+
+    // TEXT CREATION
+    //_text = std::make_unique<errera::Text>(font);
+    //_text->Create(errera::GetEngine().GetRenderer(), "Hello World", errera::vec3{ 1, 1, 1 });
+
     return true;
 }
 
@@ -86,6 +96,9 @@ void SpaceGame::Update() {
 
 void SpaceGame::Draw() {
     _scene->Draw(errera::GetEngine().GetRenderer());
+
+    //// DRAW TEXT
+    //_text->Draw(errera::GetEngine().GetRenderer(), 40.0f, 40.0f);
 }
 
 void SpaceGame::Shutdown() {

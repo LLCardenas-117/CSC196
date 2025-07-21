@@ -27,6 +27,14 @@ int main(int argc, char* argv[]) {
     std::unique_ptr<SpaceGame> game = std::make_unique<SpaceGame>();
     game->Initialize();
 
+    // FONT CREATION
+    errera::Font* font = new errera::Font();
+    font->Load("ArcadeClassic.ttf", 20);
+
+    // TEXT CREATION
+    errera::Text* text = new errera::Text(font);
+    text->Create(errera::GetEngine().GetRenderer(), "Hello World", errera::vec3{ 1, 1, 1 });
+
     SDL_Event e;
     bool quit = false;
 
@@ -40,6 +48,7 @@ int main(int argc, char* argv[]) {
 
         // Update Engine Systems
         errera::GetEngine().Update();
+        game->Update();
         
         if (errera::GetEngine().GetInput().GetKeyPressed(SDL_SCANCODE_ESCAPE)) quit = true;
 
@@ -49,10 +58,16 @@ int main(int argc, char* argv[]) {
         errera::GetEngine().GetRenderer().SetColor(color.r, color.g, color.b);
         errera::GetEngine().GetRenderer().Clear(); // Clear the screen with black
 
+        // DRAW TEXT
+        text->Draw(errera::GetEngine().GetRenderer(), 40.0f, 40.0f);
+
+        game->Draw();
+
         errera::GetEngine().GetRenderer().Present();
     }
 
     errera::GetEngine().Shutdown();
+    game->Shutdown();
 
     return 0;
 }

@@ -1,18 +1,22 @@
 #include "Renderer.h"
 
-namespace errera
-{
+namespace errera {
     bool Renderer::Initialize() {
         if (!SDL_Init(SDL_INIT_VIDEO)) {
             std::cerr << "SDL_INIT ERROR: " << SDL_GetError() << std::endl;
             return false;
         }
 
+        if (!TTF_Init()) {
+            std::cerr << "TTF_Init Error: " << SDL_GetError() << std::endl;
+            return false;
+        }
+
         return true;
     }
 
-    void Renderer::Shutdown()
-    {
+    void Renderer::Shutdown() {
+        TTF_Quit();
         SDL_DestroyRenderer(_renderer);
         SDL_DestroyWindow(_window);
         SDL_Quit();

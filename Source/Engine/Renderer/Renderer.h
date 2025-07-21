@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <iostream>
 
 namespace errera {
@@ -29,5 +30,7 @@ namespace errera {
 	private:
 		SDL_Window* _window = nullptr;
 		SDL_Renderer* _renderer = nullptr;
+
+		friend class Text;
 	};
 }

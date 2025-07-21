@@ -1,5 +1,6 @@
 #pragma once
 #include "Framework/Game.h"
+#include "Renderer/Text.h"
 
 class SpaceGame : public errera::Game {
 public:
@@ -14,7 +15,6 @@ public:
 	void Shutdown() override;
 	
 
-private:
-	//
-
+protected:
+	//std::unique_ptr<errera::Text> _text;
 };
