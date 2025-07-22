@@ -27,9 +27,15 @@ namespace errera {
 
 		void DrawPoint(float x, float y);
 
+		int GetWidth() const { return _width; }
+		int GetHeight() const { return _height; }
+
 	private:
 		SDL_Window* _window = nullptr;
 		SDL_Renderer* _renderer = nullptr;
+
+		int _width{ 0 };
+		int _height{ 0 };
 
 		friend class Text;
 	};

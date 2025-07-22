@@ -2,9 +2,16 @@
 #include "../Math/Transform.h"
 
 #include <memory>
+#include <string>
 
 namespace errera {
 	class Actor {
+	public:
+		std::string name;
+		std::string tag;
+
+		vec2 velocity{ 0, 0 };
+
 	public:
 		Actor() = default;
 		Actor(const Transform& transform, std::shared_ptr<class Model> model) :
