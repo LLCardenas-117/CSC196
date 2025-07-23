@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 
 namespace errera {
 	class Scene {
@@ -12,8 +13,10 @@ namespace errera {
 		void Draw(class Renderer& renderer);
 
 		void AddActor(std::unique_ptr < class Actor >);
+
+		Actor* GetActorByName(const std::string& name);
 		
 	private:
-		std::vector < std::unique_ptr < class Actor >> _actors;
+		std::vector < std::unique_ptr <Actor>> _actors;
 	};
 }

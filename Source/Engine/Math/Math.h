@@ -21,6 +21,38 @@ namespace errera::math {
 	/// <returns></returns>
 	constexpr float degToRad(float deg) { return deg * (pi / 180); }
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="value"></param>
+	/// <param name="min"></param>
+	/// <param name="max"></param>
+	/// <returns></returns>
+	constexpr int wrap(int value, int min, int max) {
+		//if (value > max) value = value - max;
+
+		int range = max - min; // Calculate range of wrap
+		int result = (value - min) % range; // Shift value so range starts at 0
+		if (result < 0) result += range; // wrap forward if result is negative (value < min)
+
+		return min + result; // Shift the result back to [min, man) range
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="value"></param>
+	/// <param name="min"></param>
+	/// <param name="max"></param>
+	/// <returns></returns>
+	inline float wrap(float value, float min, float max) {
+		float range = max - min; // Calculate range of wrap
+		float result = std::fmodf(value - min, range); // Shift value so range starts at 0
+		if (result < 0) result += range; // wrap forward if result is negative (value < min)
+
+		return min + result; // Shift the result back to [min, man) range
+	}
+
 	using std::min;
 	using std::max;
 	using std::clamp;

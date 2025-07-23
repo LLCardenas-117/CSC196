@@ -6,14 +6,14 @@ namespace errera::random {
 	/// 
 	/// </summary>
 	/// <returns></returns>
-	inline int GetRandomInt() { return rand(); }
+	inline int getRandomInt() { return rand(); }
 
 	/// <summary>
 	/// 
 	/// </summary>
 	/// <param name="max"></param>
 	/// <returns></returns>
-	inline int GetRandomInt(int max) { return rand() % max; }
+	inline int getRandomInt(int max) { return rand() % max; }
 
 	/// <summary>
 	/// 
@@ -21,11 +21,11 @@ namespace errera::random {
 	/// <param name="min"></param>
 	/// <param name="max"></param>
 	/// <returns></returns>
-	inline int GetRandomInt(int min, int max) { return min + GetRandomInt(max - min + 1); }
+	inline int getRandomInt(int min, int max) { return min + getRandomInt(max - min + 1); }
 
 	/// <summary>
 	/// 
 	/// </summary>
 	/// <returns></returns>
-	inline float GetRandomFloat() { return rand() / static_cast<float>(RAND_MAX); }
+	inline float getRandomFloat() { return rand() / static_cast<float>(RAND_MAX); }
 }

@@ -12,6 +12,8 @@ namespace errera {
 		virtual void Shutdown() = 0;
 
 	protected:
+		int _score{ 0 };
+		int _lives{ 0 };
 		std::unique_ptr<class Scene> _scene;
 	};
 }

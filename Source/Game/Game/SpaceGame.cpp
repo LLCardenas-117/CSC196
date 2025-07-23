@@ -1,6 +1,8 @@
 #include "SpaceGame.h"
 
 #include "Core/Random.h"
+#include "Enemy.h"
+#include "Engine.h"
 #include "Framework/Scene.h"
 #include "Math/Vector2.h"
 #include "Player.h"
@@ -8,14 +10,13 @@
 #include "Renderer/Model.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Text.h"
-#include "Engine.h"
 
 #include <vector>
 
 bool SpaceGame::Initialize() {
     _scene = std::make_unique<errera::Scene>();
 
-    std::vector<errera::vec2> shipPoints{
+    std::vector<errera::vec2> playerShipPoints{
         { 18, 1 },
         { 14, 3 },
         { 13, 3 },
@@ -72,26 +73,52 @@ bool SpaceGame::Initialize() {
         { 18, 1 }
     };
 
-    std::shared_ptr<errera::Model> model = std::make_shared<errera::Model>(shipPoints, errera::vec3{ 0, 1, 0 });
+    std::vector<errera::vec2> enemyShipPoints{
+        { 9, 0 },
+        { 8, 3 },
+        { 6, 5 },
+        { 3, 6 },
+        { -1, 6 },
+        { -4, 5 },
+        { -7, 4 },
+        { -9, 3 },
+        { -3, 3 },
+        { -3, 1 },
+        { -1, 1 },
+        { -2, 0 },
+        { -1, -1 },
+        { -3, -1 },
+        { -3, -3 },
+        { -9, -3 },
+        { -7, -4 },
+        { -4, -5 },
+        { -1, -6 },
+        { 3, -6 },
+        { 6, -5 },
+        { 8, -3 },
+        { 9, 0 }
+    };
+
+    std::shared_ptr<errera::Model> model = std::make_shared<errera::Model>(playerShipPoints, errera::vec3{ 0, 1, 0 });
 
     errera::Transform transform{ errera::vec2{ errera::GetEngine().GetRenderer().GetWidth() * 0.5f , errera::GetEngine().GetRenderer().GetHeight() * 0.5f}, 0, 2};
     std::unique_ptr<Player> player = std::make_unique<Player>(transform, model);
+    player->speed = 1000.0f;
+    player->rotationRate = 280.0f;
+    player->damping = 0.75f;
+    player->name = "player";
+
     _scene->AddActor(std::move(player));
 
     // SAVING CODE FOR ENEMY CODE
-    /*for (int i = 0; i < 10; i++) {
-        errera::Transform transform{ errera::vec2{errera::random::getRandomFloat() * 1280, errera::random::getRandomFloat() * 1024}, 0, 2 };
-        std::unique_ptr<Player> player = std::make_unique<Player>(transform, model);
-        _scene->AddActor(std::move(player));
-    }*/
-
-    // FONT CREATION
-    /*std::unique_ptr<errera::Font> font = std::make_unique<errera::Font>();
-    font->Load("ArcadeClassic.ttf", 20);*/
-
-    // TEXT CREATION
-    /*_text = std::make_unique<errera::Text>(font);
-    _text->Create(errera::GetEngine().GetRenderer(), "Hello World", errera::vec3{ 1, 1, 1 });*/
+    std::shared_ptr<errera::Model> enemyModel = std::make_shared<errera::Model>(enemyShipPoints, errera::vec3{ 0.749f, 0.250f, 0.749f });
+    for (int i = 0; i < 10; i++) {
+        errera::Transform transform{ errera::vec2{errera::random::getRandomFloat() * errera::GetEngine().GetRenderer().GetHeight(), errera::random::getRandomFloat() * errera::GetEngine().GetRenderer().GetWidth()}, 0, 5 };
+        std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(transform, enemyModel);
+        enemy->damping = 1.5f;
+        enemy->speed = (errera::random::getRandomFloat() * 800) + 500.0f;
+        _scene->AddActor(std::move(enemy));
+    }
 
     return true;
 }
@@ -102,9 +129,6 @@ void SpaceGame::Update() {
 
 void SpaceGame::Draw() {
     _scene->Draw(errera::GetEngine().GetRenderer());
-
-    //// DRAW TEXT
-    //_text->Draw(errera::GetEngine().GetRenderer(), 40.0f, 40.0f);
 }
 
 void SpaceGame::Shutdown() {

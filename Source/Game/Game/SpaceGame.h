@@ -15,6 +15,6 @@ public:
 	void Shutdown() override;
 	
 
-protected:
-	//std::unique_ptr<errera::Text> _text;
+private:
+
 };
