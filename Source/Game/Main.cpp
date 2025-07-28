@@ -7,8 +7,10 @@
 #include "Math/Transform.h"
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
+#include "Renderer/Font.h"
 #include "Renderer/Model.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/Text.h"
 #include "Engine.h"
 
 #include "Game/Player.h"

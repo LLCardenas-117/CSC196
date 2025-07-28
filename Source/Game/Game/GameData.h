@@ -7,4 +7,6 @@ namespace GameData {
 	extern std::vector<errera::vec2> playerShipPoints;
 
 	extern std::vector<errera::vec2> enemyShipPoints;
+
+	extern std::vector<errera::vec2> misslePoints;
 }

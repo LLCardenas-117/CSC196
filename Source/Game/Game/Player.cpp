@@ -3,6 +3,11 @@
 #include "Input/InputSystem.h"
 #include "Renderer/Renderer.h"
 
+#include "GameData.h"
+#include "Rocket.h"
+#include "Math/Vector3.h"
+#include "Renderer/Model.h"
+
 void Player::Update(float dt) { //dt = Delta Time
     // Rotation
     float rotate = 0;
@@ -27,6 +32,13 @@ void Player::Update(float dt) { //dt = Delta Time
 
     // check fire key pressed
     // spawn rocket with staying to the players position
+    if (errera::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_SPACE)) {
+
+        std::shared_ptr<errera::Model> missleModel = std::make_shared<errera::Model>(GameData::enemyShipPoints, errera::vec3{ 0.749f, 0.250f, 0.749f });
+        errera::Transform missleTransform{ errera::vec2{transform.position.x, transform.position.y}, 0, 2.5 };
+        std::unique_ptr<Rocket> enemy = std::make_unique<Rocket>(missleTransform, missleModel);
+        //Rocket(const errera::Transform & transform, std::shared_ptr<errera::Model> model)
+    }
 
     Actor::Update(dt);
 }

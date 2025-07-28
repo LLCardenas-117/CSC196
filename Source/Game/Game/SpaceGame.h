@@ -1,6 +1,5 @@
 #pragma once
 #include "Framework/Game.h"
-#include "Renderer/Text.h"
 
 class SpaceGame : public errera::Game {
 public:
