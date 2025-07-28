@@ -1,18 +1,11 @@
-#include "Enemy.h"
+#include "Rocket.h"
 
 #include "Engine.h"
 #include "Player.h"
 #include "Framework/Scene.h"
 #include "Renderer/Renderer.h"
 
-void Enemy::Update(float dt){
-    Player* player = scene->GetActorByName<Player>("player");
-    if (player) {
-        errera::vec2 direction{ 1, 0 };
-        direction = player->transform.position - transform.position;
-        direction = direction.Normalized();
-        transform.rotation = errera::math::radToDeg(direction.Angle());
-    }
+void Rocket::Update(float dt) {
 
     errera::vec2 force = errera::vec2{ 1, 0 }.Rotate(errera::math::degToRad(transform.rotation)) * speed;
 

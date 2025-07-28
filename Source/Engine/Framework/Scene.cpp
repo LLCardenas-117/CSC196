@@ -36,16 +36,7 @@ namespace errera {
 	/// <summary>
 	/// 
 	/// </summary>
-	/// <param name="name"></param>
-	/// <returns></returns>
-	Actor* Scene::GetActorByName(const std::string& name)
-	{
-		for (auto& actor : _actors) {
-			if (tolower(actor->name) == tolower(name)) {
-				return actor.get();
-			}
-		}
-
-		return nullptr;
+	void Scene::RemoveAllActors() {
+		_actors.clear();
 	}
 }

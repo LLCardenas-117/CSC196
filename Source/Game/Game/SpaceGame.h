@@ -4,11 +4,22 @@
 
 class SpaceGame : public errera::Game {
 public:
+	enum class GameState {
+		Initialize,
+		Title,
+		StartGame,
+		StartLevel,
+		Game,
+		PlayerDead,
+		GameOver
+	};
+
+public:
 	SpaceGame() = default;
 
 	bool Initialize() override;
 
-	void Update() override;
+	void Update(float dt) override;
 
 	void Draw() override;
 
@@ -16,5 +27,6 @@ public:
 	
 
 private:
-
+	GameState _gameState = GameState::Initialize;
+	float _enemySpawnTimer{ 0 };
 };

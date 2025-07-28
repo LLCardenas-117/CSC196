@@ -25,5 +25,8 @@ void Player::Update(float dt) { //dt = Delta Time
     transform.position.x = errera::math::wrap(transform.position.x, 0.0f, (float)errera::GetEngine().GetRenderer().GetWidth());
     transform.position.y = errera::math::wrap(transform.position.y, 0.0f, (float)errera::GetEngine().GetRenderer().GetHeight());
 
+    // check fire key pressed
+    // spawn rocket with staying to the players position
+
     Actor::Update(dt);
 }

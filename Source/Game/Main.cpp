@@ -19,7 +19,6 @@
 #include <memory>
 
 int main(int argc, char* argv[]) {
-
     // Initialize Engine Systems
     errera::GetEngine().Initialize();
 
@@ -48,7 +47,7 @@ int main(int argc, char* argv[]) {
 
         // Update Engine Systems
         errera::GetEngine().Update();
-        game->Update();
+        game->Update(errera::GetEngine().GetTime().GetDeltaTime());
         
         if (errera::GetEngine().GetInput().GetKeyPressed(SDL_SCANCODE_ESCAPE)) quit = true;
 
