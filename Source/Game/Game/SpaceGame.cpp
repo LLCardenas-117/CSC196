@@ -19,10 +19,10 @@ bool SpaceGame::Initialize() {
     _scene = std::make_unique<errera::Scene>(this);
 
     _titleFont = std::make_shared<errera::Font>();
-    _titleFont->Load("arcadeclasic.ttf", 128);
+    _titleFont->Load("arcadeclassic.ttf", 128);
 
     _uiFont = std::make_shared<errera::Font>();
-    _uiFont->Load("arcadeclasic.ttf", 48);
+    _uiFont->Load("arcadeclassic.ttf", 48);
 
     _titleText = std::make_unique<errera::Text>(_titleFont);
     _scoreText = std::make_unique<errera::Text>(_uiFont);
