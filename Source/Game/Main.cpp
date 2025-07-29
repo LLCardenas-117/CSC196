@@ -22,46 +22,38 @@
 
 int main(int argc, char* argv[]) {
 
-    // Get current directory path
-    std::cout << "Directory Operations:\n";
-    std::cout << "Current directory: " << errera::file::GetCurrentDirectory() << "\n";
+    // Test getInt() variants
+    std::cout << "Integer Functions:\n";
+    std::cout << "getInt(): " << errera::random::getInt() << "\n";
+    std::cout << "getInt(): " << errera::random::getInt() << "\n";
+    std::cout << "getInt(10): " << errera::random::getInt(10) << "\n";
+    std::cout << "getInt(10): " << errera::random::getInt(10) << "\n";
+    std::cout << "getInt(5, 15): " << errera::random::getInt(5, 15) << "\n";
+    std::cout << "getInt(5, 15): " << errera::random::getInt(5, 15) << "\n";
+    std::cout << "getInt(-10, 10): " << errera::random::getInt(-10, 10) << "\n\n";
 
-    // Set current directory path (current path + "Assets")
-    std::cout << "Setting directory to 'Assets'...\n";
-    errera::file::SetCurrentDirectory("Assets");
-    std::cout << "New directory: " << errera::file::GetCurrentDirectory() << "\n\n";
+    // Test getReal() variants with float
+    std::cout << "Float Functions:\n";
+    std::cout << std::fixed << std::setprecision(6);
+    std::cout << "getReal<float>(): " << errera::random::getReal<float>() << "\n";
+    std::cout << "getReal<float>(): " << errera::random::getReal<float>() << "\n";
+    std::cout << "getReal<float>(5.0f): " << errera::random::getReal<float>(5.0f) << "\n";
+    std::cout << "getReal<float>(2.5f, 7.5f): " << errera::random::getReal<float>(2.5f, 7.5f) << "\n";
+    std::cout << "getReal<float>(-1.0f, 1.0f): " << errera::random::getReal<float>(-1.0f, 1.0f) << "\n\n";
 
-    // Get filenames in the current directory
-    std::cout << "Files in Directory:\n";
-    auto filenames = errera::file::GetFilesInDirectory(errera::file::GetCurrentDirectory());
-    for (const auto& filename : filenames) {
-        std::cout << filename << "\n";
+    // Test getReal() variants with double
+    std::cout << "Double Functions:\n";
+    std::cout << std::setprecision(10);
+    std::cout << "getReal<double>(): " << errera::random::getReal<double>() << "\n";
+    std::cout << "getReal<double>(100.0): " << errera::random::getReal<double>(100.0) << "\n";
+    std::cout << "getReal<double>(0.0, 2.0): " << errera::random::getReal<double>(0.0, 2.0) << "\n\n";
+
+    // Test getBool()
+    std::cout << "Boolean Functions:\n";
+    for (int i = 0; i < 10; ++i) {
+        std::cout << "getBool(): " << std::boolalpha << errera::random::getBool() << "\n";
     }
     std::cout << "\n";
-
-    // Get filename (filename.extension) only
-    if (!filenames.empty()) {
-        std::cout << "Path Analysis:\n";
-        std::string filename = errera::file::GetFilename(filenames[0]);
-        std::cout << "Filename only: " << filename << "\n";
-
-        // Get extension only
-        std::string ext = errera::file::GetExtension(filenames[0]);
-        std::cout << "Extension: " << ext << "\n\n";
-    }
-
-    // Read and display text file
-    std::cout << "Text File Reading:\n";
-    std::string str;
-    bool success = errera::file::ReadTextFile("test.txt", str);
-    if (success) {
-        std::cout << "Contents of test.txt:\n";
-        std::cout << str << "\n";
-    }
-    else {
-        std::cout << "Failed to read test.txt\n";
-    }
-
 
     /*
     // Initialize Engine Systems
@@ -104,6 +96,5 @@ int main(int argc, char* argv[]) {
     errera::GetEngine().Shutdown();
 
     return 0;
-
     */
 }

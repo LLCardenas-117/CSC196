@@ -72,10 +72,10 @@ void SpaceGame::Update(float dt) {
 
             // SAVING CODE FOR ENEMY CODE
             std::shared_ptr<errera::Model> enemyModel = std::make_shared<errera::Model>(GameData::enemyShipPoints, errera::vec3{ 0.749f, 0.250f, 0.749f });
-            errera::Transform transform{ errera::vec2{errera::random::getRandomFloat() * errera::GetEngine().GetRenderer().GetHeight(), errera::random::getRandomFloat() * errera::GetEngine().GetRenderer().GetWidth()}, 0, 2.5 };
+            errera::Transform transform{ errera::vec2{errera::random::getReal() * errera::GetEngine().GetRenderer().GetHeight(), errera::random::getReal() * errera::GetEngine().GetRenderer().GetWidth()}, 0, 2.5 };
             std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(transform, enemyModel);
             enemy->damping = 1.5f;
-            enemy->speed = 0;// (errera::random::getRandomFloat() * 800) + 500.0f;
+            enemy->speed = 0;// (errera::random::getReal() * 800) + 500.0f;
             enemy->tag = "enemy";
             _scene->AddActor(std::move(enemy));
         }
