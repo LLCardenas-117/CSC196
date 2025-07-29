@@ -16,7 +16,17 @@
 #include <vector>
 
 bool SpaceGame::Initialize() {
-    _scene = std::make_unique<errera::Scene>();
+    _scene = std::make_unique<errera::Scene>(this);
+
+    _titleFont = std::make_shared<errera::Font>();
+    _titleFont->Load("arcadeclasic.ttf", 128);
+
+    _uiFont = std::make_shared<errera::Font>();
+    _uiFont->Load("arcadeclasic.ttf", 48);
+
+    _titleText = std::make_unique<errera::Text>(_titleFont);
+    _scoreText = std::make_unique<errera::Text>(_uiFont);
+    _livesText = std::make_unique<errera::Text>(_uiFont);
 
     return true;
 }
@@ -24,7 +34,7 @@ bool SpaceGame::Initialize() {
 void SpaceGame::Update(float dt) {
     switch (_gameState) {
     case SpaceGame::GameState::Initialize:
-        _gameState = GameState::Title;
+        _gameState = GameState::StartGame;
         break;
 
     case SpaceGame::GameState::Title:
@@ -43,7 +53,7 @@ void SpaceGame::Update(float dt) {
     {
         std::shared_ptr<errera::Model> model = std::make_shared<errera::Model>(GameData::playerShipPoints, errera::vec3{ 0, 1, 0 });
         errera::Transform transform{ errera::vec2{ errera::GetEngine().GetRenderer().GetWidth() * 0.5f , errera::GetEngine().GetRenderer().GetHeight() * 0.5f}, 0, 5 };
-        std::unique_ptr<Player> player = std::make_unique<Player>(transform, model);
+        auto player = std::make_unique<Player>(transform, model);
         player->speed = 1000.0f;
         player->rotationRate = 280.0f;
         player->damping = 0.75f;
@@ -58,14 +68,14 @@ void SpaceGame::Update(float dt) {
     case SpaceGame::GameState::Game:
         _enemySpawnTimer -= dt;
         if (_enemySpawnTimer <= 0) {
-            _enemySpawnTimer = 4;
+            _enemySpawnTimer = 10;
 
             // SAVING CODE FOR ENEMY CODE
             std::shared_ptr<errera::Model> enemyModel = std::make_shared<errera::Model>(GameData::enemyShipPoints, errera::vec3{ 0.749f, 0.250f, 0.749f });
             errera::Transform transform{ errera::vec2{errera::random::getRandomFloat() * errera::GetEngine().GetRenderer().GetHeight(), errera::random::getRandomFloat() * errera::GetEngine().GetRenderer().GetWidth()}, 0, 2.5 };
             std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(transform, enemyModel);
             enemy->damping = 1.5f;
-            enemy->speed = (errera::random::getRandomFloat() * 800) + 500.0f;
+            enemy->speed = 0;// (errera::random::getRandomFloat() * 800) + 500.0f;
             enemy->tag = "enemy";
             _scene->AddActor(std::move(enemy));
         }

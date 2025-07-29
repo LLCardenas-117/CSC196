@@ -1,5 +1,6 @@
 #pragma once
 #include "../Math/Transform.h"
+#include "../Renderer/Model.h"
 
 #include <memory>
 #include <string>
@@ -12,6 +13,9 @@ namespace errera {
 
 		vec2 velocity{ 0, 0 };
 		float damping{ 0.2f };
+
+		bool destroyed{ false };
+		float lifespan{ 0 };
 
 		Transform transform;
 		class Scene* scene{ nullptr };
@@ -26,7 +30,9 @@ namespace errera {
 		virtual void Update(float dt);
 		virtual void Draw(class Renderer& renderer);
 
-		Transform& GetTransform() { return transform; }
+		virtual void OnCollision(Actor* other) = 0;
+
+		float GetRadius();
 
 	protected:
 		std::shared_ptr<Model> _model;

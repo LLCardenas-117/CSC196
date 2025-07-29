@@ -1,12 +1,13 @@
 #include "Player.h"
-#include "Engine.h"
-#include "Input/InputSystem.h"
-#include "Renderer/Renderer.h"
 
+#include "Engine.h"
 #include "GameData.h"
-#include "Rocket.h"
+#include "Input/InputSystem.h"
 #include "Math/Vector3.h"
 #include "Renderer/Model.h"
+#include "Renderer/Renderer.h"
+#include "Rocket.h"
+#include "Framework/Scene.h"
 
 void Player::Update(float dt) { //dt = Delta Time
     // Rotation
@@ -32,13 +33,26 @@ void Player::Update(float dt) { //dt = Delta Time
 
     // check fire key pressed
     // spawn rocket with staying to the players position
-    if (errera::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_SPACE)) {
+    fireTimer -= dt;
+    if (errera::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_E) && fireTimer <= 0) {
+        fireTimer = fireTime;
 
-        std::shared_ptr<errera::Model> missleModel = std::make_shared<errera::Model>(GameData::enemyShipPoints, errera::vec3{ 0.749f, 0.250f, 0.749f });
-        errera::Transform missleTransform{ errera::vec2{transform.position.x, transform.position.y}, 0, 2.5 };
-        std::unique_ptr<Rocket> enemy = std::make_unique<Rocket>(missleTransform, missleModel);
-        //Rocket(const errera::Transform & transform, std::shared_ptr<errera::Model> model)
+        std::shared_ptr<errera::Model> missleModel = std::make_shared<errera::Model>(GameData::misslePoints, errera::vec3{ 1.0f, 0.0f, 0.0f });
+        errera::Transform missleTransform{ this->transform.position, this->transform.rotation, 1.5f };
+        auto rocket = std::make_unique<Rocket>(missleTransform, missleModel);
+        rocket->speed = 1000.0f;
+        rocket->lifespan = 1.5f;
+        rocket->name = "rocket";
+        rocket->tag = "player";
+
+        scene->AddActor(std::move(rocket));
     }
 
     Actor::Update(dt);
+}
+
+void Player::OnCollision(Actor* other) {
+    if (tag != other->tag) {
+        destroyed = true;
+    }
 }

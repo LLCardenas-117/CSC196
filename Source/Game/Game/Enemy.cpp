@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 #include "Player.h"
+#include "Framework/Game.h"
 #include "Framework/Scene.h"
 #include "Renderer/Renderer.h"
 
@@ -22,4 +23,11 @@ void Enemy::Update(float dt){
     transform.position.y = errera::math::wrap(transform.position.y, 0.0f, (float)errera::GetEngine().GetRenderer().GetHeight());
 
     Actor::Update(dt);
+}
+
+void Enemy::OnCollision(Actor* other) {
+    if (tag != other->tag) {
+        destroyed = true;
+        scene->GetGame()->AddPoints(100);
+    }
 }

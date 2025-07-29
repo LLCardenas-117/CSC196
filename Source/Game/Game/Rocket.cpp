@@ -9,10 +9,16 @@ void Rocket::Update(float dt) {
 
     errera::vec2 force = errera::vec2{ 1, 0 }.Rotate(errera::math::degToRad(transform.rotation)) * speed;
 
-    velocity += force * dt;
+    velocity = force;
 
     transform.position.x = errera::math::wrap(transform.position.x, 0.0f, (float)errera::GetEngine().GetRenderer().GetWidth());
     transform.position.y = errera::math::wrap(transform.position.y, 0.0f, (float)errera::GetEngine().GetRenderer().GetHeight());
 
     Actor::Update(dt);
+}
+
+void Rocket::OnCollision(Actor* other) {
+    if (tag != other->tag) {
+        destroyed = true;
+    }
 }

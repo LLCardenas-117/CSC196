@@ -1,19 +1,23 @@
 #pragma once
 #include "../Core/StringHelper.h"
 
-#include <vector>
+#include <list>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace errera {
+	class Actor;
+	class Game;
+
 	class Scene {
 	public:
-		Scene() = default;
+		Scene(Game* game) : _game{ game } {};
 
 		void Update(float dt);
 		void Draw(class Renderer& renderer);
 
-		void AddActor(std::unique_ptr < class Actor >);
+		void AddActor(std::unique_ptr<Actor>);
 
 		void RemoveAllActors();
 
@@ -22,9 +26,12 @@ namespace errera {
 
 		template<typename T = Actor>
 		std::vector<T*> GetActorsByTag(const std::string& tag);
+
+		Game* GetGame() { return _game; }
 		
 	private:
-		std::vector < std::unique_ptr <Actor>> _actors;
+		Game* _game{ nullptr };
+		std::list < std::unique_ptr <Actor>> _actors;
 	};
 
 	/// <summary>

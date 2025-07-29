@@ -3,20 +3,22 @@
 #include "Font.h"
 #include "../Math/Vector3.h"
 
+#include <memory>
+
 struct SDL_Texture;
 
 namespace errera {
 	class Text {
 	public:
 		Text() = default;
-		Text(Font* font) : _font{ font } {}
+		Text(std::shared_ptr<Font> font) : _font{ font } {}
 		~Text();
 
 		bool Create(Renderer& renderer, const std::string& text, const vec3& color);
 		void Draw(Renderer& renderer, float x, float y);
 
 	private:
-		Font* _font{ nullptr };
+		std::shared_ptr<Font> _font{ nullptr };
 		SDL_Texture* _texture{ nullptr };
 	};
 }

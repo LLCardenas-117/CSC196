@@ -5,6 +5,8 @@ class Player : public errera::Actor {
 public:
 	float speed = 200;
 	float rotationRate = 180;
+	float fireTime = 0.2f;
+	float fireTimer = 0.0f;
 
 public:
 	Player() = default;
@@ -14,6 +16,6 @@ public:
 
 	void Update(float dt) override;
 
-private:
+	void OnCollision(Actor* other) override;
 
 };

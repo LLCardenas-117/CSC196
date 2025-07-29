@@ -29,5 +29,16 @@ namespace errera {
 	void Model::Draw(Renderer& renderer, const Transform& transform) {
 		Draw(renderer, transform.position, transform.rotation, transform.scale);
 	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	void Model::CalculateRadius() {
+		_radius = 0;
+		for (auto& point : _points) {
+			float length = point.Length();
+			if (length > _radius) _radius = length;
+		}
+	}
 }
 

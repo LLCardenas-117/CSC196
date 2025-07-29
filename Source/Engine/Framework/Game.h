@@ -11,6 +11,12 @@ namespace errera {
 		virtual void Draw() = 0;
 		virtual void Shutdown() = 0;
 
+		void AddPoints(int points) { _score += points; }
+		int GetPoints() const { return _score; }
+
+		void SetLives(int lives) { _lives += lives; }
+		int GetLives() const { return _lives; }
+
 	protected:
 		int _score{ 0 };
 		int _lives{ 0 };
