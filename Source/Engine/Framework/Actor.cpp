@@ -21,7 +21,7 @@ namespace errera {
 	}
 
 	float Actor::GetRadius() {
-		return (_model) ? _model->GetRadius() * transform.scale : 0;
+		return (_model) ? _model->GetRadius() * transform.scale * 0.8f : 0;
 	}
 
 }

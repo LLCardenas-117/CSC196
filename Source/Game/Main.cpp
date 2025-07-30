@@ -1,4 +1,5 @@
 #include "Audio/AudioSystem.h"
+#include "Core/File.h"
 #include "Core/Random.h"
 #include "Core/Time.h"
 #include "Framework/Actor.h"
@@ -18,7 +19,6 @@
 #include <vector>
 #include <memory>
 
-#include "Core/File.h"
 
 int main(int argc, char* argv[]) {
     errera::file::SetCurrentDirectory("Assets");
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
         errera::GetEngine().GetRenderer().SetColor(color.r, color.g, color.b);
         errera::GetEngine().GetRenderer().Clear(); // Clear the screen with black
 
-        game->Draw();
+        game->Draw(errera::GetEngine().GetRenderer());
 
         errera::GetEngine().GetRenderer().Present();
     }

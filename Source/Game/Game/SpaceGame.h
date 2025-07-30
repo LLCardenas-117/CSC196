@@ -22,7 +22,9 @@ public:
 
 	void Update(float dt) override;
 
-	void Draw() override;
+	void Draw(class errera::Renderer& renderer) override;
+
+	void OnPlayerDeath();
 
 	void Shutdown() override;
 	
@@ -30,6 +32,7 @@ public:
 private:
 	GameState _gameState = GameState::Initialize;
 	float _enemySpawnTimer{ 0 };
+	float _stateTimer{ 0 };
 
 	std::shared_ptr<errera::Font> _titleFont;
 	std::shared_ptr<errera::Font> _uiFont;

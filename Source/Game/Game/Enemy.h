@@ -5,6 +5,8 @@
 class Enemy : public errera::Actor {
 public:
 	float speed = 200;
+	float fireTimer = 0;
+	float fireTime = 0;
 
 public:
 	Enemy() = default;

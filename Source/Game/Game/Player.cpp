@@ -1,15 +1,25 @@
 #include "Player.h"
 
 #include "Engine.h"
+#include "Framework/Scene.h"
 #include "GameData.h"
 #include "Input/InputSystem.h"
 #include "Math/Vector3.h"
 #include "Renderer/Model.h"
+#include "Renderer/ParticleSystem.h"
 #include "Renderer/Renderer.h"
 #include "Rocket.h"
-#include "Framework/Scene.h"
+#include "SpaceGame.h"
 
 void Player::Update(float dt) { //dt = Delta Time
+	errera::Particle particle;
+
+    particle.position = transform.position;
+    particle.velocity = errera::vec2{2, 0};
+	particle.color = errera::vec3{ 1.0f, 1.0f, 1.0f };
+	particle.lifespan = 2.0f;
+	errera::GetEngine().GetParticleSystem().AddParticle(particle);
+
     // Rotation
     float rotate = 0;
     if (errera::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_A)) rotate = -1;
@@ -54,5 +64,6 @@ void Player::Update(float dt) { //dt = Delta Time
 void Player::OnCollision(Actor* other) {
     if (tag != other->tag) {
         destroyed = true;
+		dynamic_cast<SpaceGame*>(scene->GetGame())->OnPlayerDeath();
     }
 }

@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "Renderer/ParticleSystem.h"
 #include "Renderer/Renderer.h"
 #include "Input/InputSystem.h"
 #include "Audio/AudioSystem.h"
@@ -14,6 +15,9 @@ namespace errera {
 
 		_audio = std::make_unique<AudioSystem>();
 		_audio->Initialize();
+
+		_particleSystem = std::make_unique<ParticleSystem>();
+		_particleSystem->Initialize();
 		return true;
 	}
 
@@ -21,6 +25,7 @@ namespace errera {
 		_time.Tick();
 		_input->Update();
 		_audio->Update();
+		_particleSystem->Update(_time.GetDeltaTime());
 	}
 
 	void Engine::Draw() {
@@ -28,6 +33,7 @@ namespace errera {
 	}
 
 	void Engine::Shutdown()	{
+		_particleSystem->ShutDown();
 		_audio->Shutdown();
 		_input->Shutdown();
 		_renderer->Shutdown();

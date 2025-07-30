@@ -7,6 +7,7 @@ namespace errera {
 	class AudioSystem;
 	class InputSystem;
 	class Renderer;
+	class ParticleSystem;
 
 	class Engine {
 	public:
@@ -20,6 +21,7 @@ namespace errera {
 		Renderer& GetRenderer() { return *_renderer; }
 		InputSystem& GetInput() { return *_input; }
 		AudioSystem& GetAudio() { return *_audio; }
+		ParticleSystem& GetParticleSystem() { return *_particleSystem; }
 
 		Time& GetTime() { return _time; }
 
@@ -29,6 +31,7 @@ namespace errera {
 		std::unique_ptr<AudioSystem> _audio;
 		std::unique_ptr<InputSystem> _input;
 		std::unique_ptr<Renderer> _renderer;
+		std::unique_ptr<ParticleSystem> _particleSystem;
 	};
 
 	Engine& GetEngine();

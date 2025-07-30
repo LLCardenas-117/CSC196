@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Renderer/Font.h"
 #include "Renderer/Model.h"
+#include "Renderer/ParticleSystem.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Text.h"
 #include "Input/InputSystem.h"
@@ -34,7 +35,7 @@ bool SpaceGame::Initialize() {
 void SpaceGame::Update(float dt) {
     switch (_gameState) {
     case SpaceGame::GameState::Initialize:
-        _gameState = GameState::StartGame;
+        _gameState = GameState::Title;
         break;
 
     case SpaceGame::GameState::Title:
@@ -51,6 +52,9 @@ void SpaceGame::Update(float dt) {
 
     case SpaceGame::GameState::StartLevel:
     {
+        _scene->RemoveAllActors();
+
+        // Create Player
         std::shared_ptr<errera::Model> model = std::make_shared<errera::Model>(GameData::playerShipPoints, errera::vec3{ 0, 1, 0 });
         errera::Transform transform{ errera::vec2{ errera::GetEngine().GetRenderer().GetWidth() * 0.5f , errera::GetEngine().GetRenderer().GetHeight() * 0.5f}, 0, 5 };
         auto player = std::make_unique<Player>(transform, model);
@@ -75,7 +79,9 @@ void SpaceGame::Update(float dt) {
             errera::Transform transform{ errera::vec2{errera::random::getReal() * errera::GetEngine().GetRenderer().GetHeight(), errera::random::getReal() * errera::GetEngine().GetRenderer().GetWidth()}, 0, 2.5 };
             std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(transform, enemyModel);
             enemy->damping = 1.5f;
-            enemy->speed = 0;// (errera::random::getReal() * 800) + 500.0f;
+            enemy->fireTime = 3;
+            enemy->fireTimer = 5;
+            enemy->speed = (float)(errera::random::getReal() * 200) + 300.0f;
             enemy->tag = "enemy";
             _scene->AddActor(std::move(enemy));
         }
@@ -83,20 +89,52 @@ void SpaceGame::Update(float dt) {
         break;
 
     case SpaceGame::GameState::PlayerDead:
-        _lives--;
-        if (_lives == 0) _gameState = GameState::GameOver;
-        else { _gameState = GameState::StartLevel; }
+        _stateTimer -= dt;
+		if (_stateTimer <= 0) {
+            _lives--;
+            if (_lives == 0) {
+                _stateTimer = 3;
+                _gameState = GameState::GameOver; 
+            }
+            else { _gameState = GameState::StartLevel; }
+		}
         break;
 
     case SpaceGame::GameState::GameOver:
+        _stateTimer -= dt;
+        if (_stateTimer <= 0) {
+		    _gameState = GameState::Title;
+        }
         break;
     }
 
     _scene->Update(errera::GetEngine().GetTime().GetDeltaTime());
 }
 
-void SpaceGame::Draw() {
-    _scene->Draw(errera::GetEngine().GetRenderer());
+void SpaceGame::Draw(errera::Renderer& renderer) {
+    if (_gameState == GameState::Title) {
+        _titleText->Create(renderer, "Halo Space", errera::vec3{ 0, 1, 0 });
+        _titleText->Draw(renderer, renderer.GetHeight() / 3, renderer.GetWidth() / 3);
+    }
+    if (_gameState == GameState::GameOver) {
+        _titleText->Create(renderer, "GAME OVER", errera::vec3{ 1, 0, 0 });
+        _titleText->Draw(renderer, renderer.GetHeight() / 3, renderer.GetWidth() / 3);
+    }
+
+	_scoreText->Create(renderer, "SCORE " + std::to_string(_score), errera::vec3{1, 1, 1});
+	_scoreText->Draw(renderer, 10, 10);
+
+    _livesText->Create(renderer, "LIVES " + std::to_string(_lives), errera::vec3{1, 1, 1});
+    _livesText->Draw(renderer,(float)(renderer.GetWidth() - 200), 10);
+
+    _scene->Draw(renderer);
+
+	errera::GetEngine().GetParticleSystem().Draw(renderer);
+}
+
+void SpaceGame::OnPlayerDeath() {
+	_gameState = GameState::PlayerDead;
+    _stateTimer = 2;
 }
 
 void SpaceGame::Shutdown() {

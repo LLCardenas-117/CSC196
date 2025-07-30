@@ -5,6 +5,10 @@
 #include "Framework/Game.h"
 #include "Framework/Scene.h"
 #include "Renderer/Renderer.h"
+#include "Rocket.h"
+#include "GameData.h"
+#include "Math/Vector3.h"
+#include "Renderer/Model.h"
 
 void Enemy::Update(float dt){
     Player* player = scene->GetActorByName<Player>("player");
@@ -21,6 +25,21 @@ void Enemy::Update(float dt){
 
     transform.position.x = errera::math::wrap(transform.position.x, 0.0f, (float)errera::GetEngine().GetRenderer().GetWidth());
     transform.position.y = errera::math::wrap(transform.position.y, 0.0f, (float)errera::GetEngine().GetRenderer().GetHeight());
+
+    fireTimer -= dt;
+    if (fireTimer <= 0) {
+        fireTimer = fireTime;
+
+        std::shared_ptr<errera::Model> missleModel = std::make_shared<errera::Model>(GameData::misslePoints, errera::vec3{ 0.0f, 0.0f, 1.0f });
+        errera::Transform missleTransform{ this->transform.position, this->transform.rotation, 1.5f };
+        auto rocket = std::make_unique<Rocket>(missleTransform, missleModel);
+        rocket->speed = 1000.0f;
+        rocket->lifespan = 1.5f;
+        rocket->name = "rocket";
+        rocket->tag = "enemy";
+
+        scene->AddActor(std::move(rocket));
+    }
 
     Actor::Update(dt);
 }
