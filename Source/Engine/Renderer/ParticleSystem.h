@@ -20,7 +20,7 @@ namespace errera {
 	public:
 		ParticleSystem() = default;
 
-		bool Initialize();
+		bool Initialize(int poolSize = 1000);
 		void ShutDown();
 
 		void Update(float dt);

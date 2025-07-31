@@ -28,6 +28,8 @@ public:
 
 	void Shutdown() override;
 	
+private:
+	void SpawnEnemy();
 
 private:
 	GameState _gameState = GameState::Initialize;

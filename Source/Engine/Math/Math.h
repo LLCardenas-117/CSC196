@@ -53,6 +53,17 @@ namespace errera::math {
 		return min + result; // Shift the result back to [min, man) range
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="v"></param>
+	/// <returns></returns>
+	template<typename T>
+	inline T sign(T v) {
+		return (v < 0) ? (T)-1 : (v > 0) ? (T)1 : (T)0;
+	}
+
 	using std::min;
 	using std::max;
 	using std::clamp;
@@ -62,6 +73,8 @@ namespace errera::math {
 	using std::sinf;
 	using std::cos;
 	using std::cosf;
+	using std::acos;
+	using std::acosf;
 	using std::atan2;
 	using std::atan2f;
 }

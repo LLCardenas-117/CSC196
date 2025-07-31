@@ -74,16 +74,7 @@ void SpaceGame::Update(float dt) {
         if (_enemySpawnTimer <= 0) {
             _enemySpawnTimer = 10;
 
-            // SAVING CODE FOR ENEMY CODE
-            std::shared_ptr<errera::Model> enemyModel = std::make_shared<errera::Model>(GameData::enemyShipPoints, errera::vec3{ 0.749f, 0.250f, 0.749f });
-            errera::Transform transform{ errera::vec2{errera::random::getReal() * errera::GetEngine().GetRenderer().GetHeight(), errera::random::getReal() * errera::GetEngine().GetRenderer().GetWidth()}, 0, 2.5 };
-            std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(transform, enemyModel);
-            enemy->damping = 1.5f;
-            enemy->fireTime = 3;
-            enemy->fireTimer = 5;
-            enemy->speed = (float)(errera::random::getReal() * 200) + 300.0f;
-            enemy->tag = "enemy";
-            _scene->AddActor(std::move(enemy));
+            SpawnEnemy();
         }
 
         break;
@@ -106,6 +97,14 @@ void SpaceGame::Update(float dt) {
 		    _gameState = GameState::Title;
         }
         break;
+    }
+
+    if (errera::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_Q)) {
+        errera::GetEngine().GetTime().SetTimeScale(0.5f);
+    }
+    else {
+        errera::GetEngine().GetTime().SetTimeScale(1.0f);
+
     }
 
     _scene->Update(errera::GetEngine().GetTime().GetDeltaTime());
@@ -138,4 +137,22 @@ void SpaceGame::OnPlayerDeath() {
 }
 
 void SpaceGame::Shutdown() {
+}
+
+void SpaceGame::SpawnEnemy() {
+    Player* player = _scene->GetActorByName<Player>("player");
+    if (player) {
+        // SAVING CODE FOR ENEMY CODE
+        std::shared_ptr<errera::Model> enemyModel = std::make_shared<errera::Model>(GameData::enemyShipPoints, errera::vec3{ 0.749f, 0.250f, 0.749f });
+        errera::vec2 position = player->transform.position + errera::random::onUnitCircle() * errera::random::getReal(200.0f, 500.0f);
+        errera::Transform transform{ position, errera::random::getReal(0.0f, 360.0f), 2.5};
+        std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(transform, enemyModel);
+        enemy->damping = 1.5f;
+        enemy->fireTime = 3;
+        enemy->fireTimer = 5;
+        enemy->speed = (float)(errera::random::getReal() * 200) + 300.0f;
+        enemy->tag = "enemy";
+        _scene->AddActor(std::move(enemy));
+
+    }
 }

@@ -3,8 +3,8 @@
 #include "Renderer.h"
 
 namespace errera {
-    bool ParticleSystem::Initialize() {
-		_particles.resize(1000); // Reserve space for 1000 particles
+    bool ParticleSystem::Initialize(int poolSize) {
+		_particles.resize(poolSize); // Reserve space for 1000 particles
 
         return true;
     }

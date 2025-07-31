@@ -17,7 +17,7 @@ namespace errera {
 		_audio->Initialize();
 
 		_particleSystem = std::make_unique<ParticleSystem>();
-		_particleSystem->Initialize();
+		_particleSystem->Initialize(5000);
 		return true;
 	}
 

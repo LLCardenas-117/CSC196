@@ -76,6 +76,49 @@ namespace errera {
 
 			return v;
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <returns></returns>
+		static float Dot(const Vector2& a, const Vector2& b) {
+			return a.x * b.x + a.y * b.y;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <returns></returns>
+		static float Cross(const Vector2& a, const Vector2& b) {
+			return a.x * b.y - a.y * b.x;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <returns></returns>
+		static float AngleBetween(const Vector2& a, const Vector2& b) {
+			return math::acosf(Dot(a, b));
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <returns></returns>
+		static float SignedAngleBetween(const Vector2& a, const Vector2& b) {
+			float x = Dot(a, b);
+			float y = Cross(a, b);
+
+			return math::atan2f(y, x);
+		}
 	};
 
 	using ivec2 = Vector2<int>;

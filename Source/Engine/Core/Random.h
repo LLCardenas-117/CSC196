@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../Math/Vector2.h"
+#include "../Math/Math.h"
+
 #include <iostream>
 #include <random>
 
@@ -93,5 +96,15 @@ namespace errera::random {
     inline bool getBool() {
         static std::bernoulli_distribution dist(0.5);
         return dist(generator());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    inline vec2 onUnitCircle() {
+        float radians = getReal(math::twoPi);
+
+        return { math::cosf(radians), math::sinf(radians) };
     }
 }

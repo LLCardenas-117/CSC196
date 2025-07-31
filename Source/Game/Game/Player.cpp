@@ -11,14 +11,16 @@
 #include "Rocket.h"
 #include "SpaceGame.h"
 
+#include "Core/Random.h"
+
 void Player::Update(float dt) { //dt = Delta Time
 	errera::Particle particle;
 
-    particle.position = transform.position;
-    particle.velocity = errera::vec2{2, 0};
+    particle.position = transform.position + errera::vec2{ -50, 0 }.Rotate(errera::math::degToRad(transform.rotation));
+    particle.velocity = errera::random::onUnitCircle() * errera::random::getReal(20.0f, 120.0f);
 	particle.color = errera::vec3{ 1.0f, 1.0f, 1.0f };
-	particle.lifespan = 2.0f;
-	errera::GetEngine().GetParticleSystem().AddParticle(particle);
+	particle.lifespan = 0.5f;
+    errera::GetEngine().GetParticleSystem().AddParticle(particle);
 
     // Rotation
     float rotate = 0;
