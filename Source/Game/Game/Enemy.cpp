@@ -1,5 +1,6 @@
 #include "Enemy.h"
 
+#include "Audio/AudioSystem.h"
 #include "Engine.h"
 #include "Player.h"
 #include "Framework/Game.h"
@@ -14,6 +15,16 @@
 #include "Math/Vector2.h"
 
 void Enemy::Update(float dt){
+
+    // Particals to the engine
+    errera::Particle particle;
+
+    particle.position = transform.position + errera::vec2{ -50, 0 }.Rotate(errera::math::degToRad(transform.rotation));
+    particle.velocity = errera::vec2{ errera::random::getReal(-80.0f, -30.0f), 0 }.Rotate(errera::math::degToRad(transform.rotation + errera::random::getReal(-90.0f, 90.0f)));
+    particle.color = errera::vec3{ 1.0f, 1.0f, 1.0f };
+    particle.lifespan = 0.5f;
+    errera::GetEngine().GetParticleSystem().AddParticle(particle);
+
     bool playerSeen = false;
 
     Player* player = scene->GetActorByName<Player>("player");
@@ -31,7 +42,6 @@ void Enemy::Update(float dt){
             float angle = errera::vec2::SignedAngleBetween(forward, direction);
             angle = errera::math::sign(angle);
             transform.rotation += errera::math::radToDeg(angle * 5 * dt);
-
         }
         
     }
@@ -47,7 +57,7 @@ void Enemy::Update(float dt){
     if (fireTimer <= 0 && playerSeen) {
         fireTimer = fireTime;
 
-        std::shared_ptr<errera::Model> missleModel = std::make_shared<errera::Model>(GameData::misslePoints, errera::vec3{ 0.0f, 0.0f, 1.0f });
+        std::shared_ptr<errera::Model> missleModel = std::make_shared<errera::Model>(GameData::enemyMisslePoints, errera::vec3{ 0.0f, 0.0f, 1.0f });
         errera::Transform missleTransform{ this->transform.position, this->transform.rotation, 1.5f };
         auto rocket = std::make_unique<Rocket>(missleTransform, missleModel);
         rocket->speed = 1000.0f;
@@ -73,5 +83,6 @@ void Enemy::OnCollision(Actor* other) {
             particle.lifespan = 2;
             errera::GetEngine().GetParticleSystem().AddParticle(particle);
         }
+        errera::GetEngine().GetAudio().PlaySound("kahboom");
     }
 }

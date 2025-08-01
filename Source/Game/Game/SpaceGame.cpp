@@ -1,5 +1,6 @@
 #include "SpaceGame.h"
 
+#include "Audio/AudioSystem.h"
 #include "Core/Random.h"
 #include "Enemy.h"
 #include "Engine.h"
@@ -13,6 +14,7 @@
 #include "Renderer/Text.h"
 #include "Input/InputSystem.h"
 #include "GameData.h"
+#include "ringBlast.h"
 
 #include <vector>
 
@@ -28,6 +30,7 @@ bool SpaceGame::Initialize() {
     _titleText = std::make_unique<errera::Text>(_titleFont);
     _scoreText = std::make_unique<errera::Text>(_uiFont);
     _livesText = std::make_unique<errera::Text>(_uiFont);
+    _ringChargeText = std::make_unique<errera::Text>(_uiFont);
 
     return true;
 }
@@ -47,6 +50,7 @@ void SpaceGame::Update(float dt) {
     case SpaceGame::GameState::StartGame:
         _score = 0;
         _lives = 3;
+        _ring = 0;
         _gameState = GameState::StartLevel;
         break;
 
@@ -71,10 +75,35 @@ void SpaceGame::Update(float dt) {
 
     case SpaceGame::GameState::Game:
         _enemySpawnTimer -= dt;
+        _ringChargeTimer -= dt;
+
         if (_enemySpawnTimer <= 0) {
             _enemySpawnTimer = 10;
 
             SpawnEnemy();
+        }
+
+        if (_ringChargeTimer <= 0) {
+            _ringChargeTimer = 40;
+
+            NewRingCharge(_ring);
+        }
+
+        if (errera::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_F) && _ring >= 1) {
+            Player* player = _scene->GetActorByName<Player>("player");
+            if (player) {
+                errera::GetEngine().GetAudio().PlaySound("ring-blast");
+                std::shared_ptr<errera::Model> ringBlastModel = std::make_shared<errera::Model>(GameData::ringPoints, errera::vec3{ 1.0f, 1.0f, 1.0f });
+                errera::vec2 position = player->transform.position + errera::random::onUnitCircle();
+                errera::Transform transform{ position, 0, 2.5 };
+                std::unique_ptr<ringBlast> ring = std::make_unique<ringBlast>(transform, ringBlastModel);
+                ring->damping = 1.5f;
+                ring->speed = 300.0f;
+                ring->tag = "player";
+                ring->lifespan = 3.0f;
+                _scene->AddActor(std::move(ring));
+                _ring -= 1;
+            }
         }
 
         break;
@@ -84,7 +113,7 @@ void SpaceGame::Update(float dt) {
 		if (_stateTimer <= 0) {
             _lives--;
             if (_lives == 0) {
-                _stateTimer = 3;
+                _stateTimer = 2;
                 _gameState = GameState::GameOver; 
             }
             else { _gameState = GameState::StartLevel; }
@@ -115,6 +144,7 @@ void SpaceGame::Draw(errera::Renderer& renderer) {
         _titleText->Create(renderer, "Halo Space", errera::vec3{ 0, 1, 0 });
         _titleText->Draw(renderer, renderer.GetHeight() / 3, renderer.GetWidth() / 3);
     }
+
     if (_gameState == GameState::GameOver) {
         _titleText->Create(renderer, "GAME OVER", errera::vec3{ 1, 0, 0 });
         _titleText->Draw(renderer, renderer.GetHeight() / 3, renderer.GetWidth() / 3);
@@ -125,6 +155,9 @@ void SpaceGame::Draw(errera::Renderer& renderer) {
 
     _livesText->Create(renderer, "LIVES " + std::to_string(_lives), errera::vec3{1, 1, 1});
     _livesText->Draw(renderer,(float)(renderer.GetWidth() - 200), 10);
+
+    _ringChargeText->Create(renderer, "Ring Charges " + std::to_string(_ring), errera::vec3{ 1, 1, 1 });
+    _ringChargeText->Draw(renderer, 10, renderer.GetHeight() - 100);
 
     _scene->Draw(renderer);
 

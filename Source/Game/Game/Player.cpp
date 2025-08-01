@@ -1,5 +1,7 @@
 #include "Player.h"
 
+#include "Audio/AudioSystem.h"
+#include "Core/Random.h"
 #include "Engine.h"
 #include "Framework/Scene.h"
 #include "GameData.h"
@@ -11,17 +13,18 @@
 #include "Rocket.h"
 #include "SpaceGame.h"
 
-#include "Core/Random.h"
-
 void Player::Update(float dt) { //dt = Delta Time
+    if (errera::GetEngine().GetInput().GetKeyPressed(SDL_SCANCODE_W)) errera::GetEngine().GetAudio().PlaySound("unsc-engine");
+
+    // Engine particle
 	errera::Particle particle;
 
     particle.position = transform.position + errera::vec2{ -50, 0 }.Rotate(errera::math::degToRad(transform.rotation));
-    particle.velocity = errera::random::onUnitCircle() * errera::random::getReal(20.0f, 120.0f);
+    particle.velocity = errera::vec2{ errera::random::getReal(-80.0f, -30.0f), 0 }.Rotate(errera::math::degToRad(transform.rotation + errera::random::getReal(-90.0f, 90.0f)));
 	particle.color = errera::vec3{ 1.0f, 1.0f, 1.0f };
 	particle.lifespan = 0.5f;
     errera::GetEngine().GetParticleSystem().AddParticle(particle);
-
+    
     // Rotation
     float rotate = 0;
     if (errera::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_A)) rotate = -1;
@@ -49,7 +52,7 @@ void Player::Update(float dt) { //dt = Delta Time
     if (errera::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_E) && fireTimer <= 0) {
         fireTimer = fireTime;
 
-        std::shared_ptr<errera::Model> missleModel = std::make_shared<errera::Model>(GameData::misslePoints, errera::vec3{ 1.0f, 0.0f, 0.0f });
+        std::shared_ptr<errera::Model> missleModel = std::make_shared<errera::Model>(GameData::playerMisslePoints, errera::vec3{ 1.0f, 0.0f, 0.0f });
         errera::Transform missleTransform{ this->transform.position, this->transform.rotation, 1.5f };
         auto rocket = std::make_unique<Rocket>(missleTransform, missleModel);
         rocket->speed = 1000.0f;
@@ -67,5 +70,6 @@ void Player::OnCollision(Actor* other) {
     if (tag != other->tag) {
         destroyed = true;
 		dynamic_cast<SpaceGame*>(scene->GetGame())->OnPlayerDeath();
+        errera::GetEngine().GetAudio().PlaySound("kahboom");
     }
 }

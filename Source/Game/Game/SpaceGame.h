@@ -34,6 +34,7 @@ private:
 private:
 	GameState _gameState = GameState::Initialize;
 	float _enemySpawnTimer{ 0 };
+	float _ringChargeTimer{ 0 };
 	float _stateTimer{ 0 };
 
 	std::shared_ptr<errera::Font> _titleFont;
@@ -42,4 +43,5 @@ private:
 	std::unique_ptr<errera::Text> _titleText;
 	std::unique_ptr<errera::Text> _scoreText;
 	std::unique_ptr<errera::Text> _livesText;
+	std::unique_ptr<errera::Text> _ringChargeText;
 };

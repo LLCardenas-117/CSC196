@@ -4,6 +4,8 @@
 #include "Core/Time.h"
 #include "Framework/Actor.h"
 #include "Framework/Scene.h"
+#include "Game/Player.h"
+#include "Game/SpaceGame.h"
 #include "Input/InputSystem.h"
 #include "Math/Transform.h"
 #include "Math/Vector2.h"
@@ -11,9 +13,6 @@
 #include "Renderer/Model.h"
 #include "Renderer/Renderer.h"
 #include "Engine.h"
-
-#include "Game/Player.h"
-#include "Game/SpaceGame.h"
 
 #include <iostream>
 #include <vector>
@@ -25,6 +24,14 @@ int main(int argc, char* argv[]) {
 
     // Initialize Engine Systems
     errera::GetEngine().Initialize();
+
+    //Creates audio in the game
+    errera::GetEngine().GetAudio().AddSound("unsc-engine.wav", "unsc-engine");
+    errera::GetEngine().GetAudio().AddSound("unsc-fire.wav", "unsc-fire");
+    errera::GetEngine().GetAudio().AddSound("cov-engine.wav", "cov-engine");
+    errera::GetEngine().GetAudio().AddSound("cov-fire.wav", "cov-fire");
+    errera::GetEngine().GetAudio().AddSound("explosion.wav", "kahboom");
+    errera::GetEngine().GetAudio().AddSound("seismic_charges.wav", "ring-blast");
 
     // Initialize Game
     std::unique_ptr<SpaceGame> game = std::make_unique<SpaceGame>();

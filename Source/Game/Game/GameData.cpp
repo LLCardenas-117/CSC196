@@ -119,7 +119,7 @@ namespace GameData {
         {21, 0}
     };
 
-    std::vector<errera::vec2> misslePoints{
+    std::vector<errera::vec2> playerMisslePoints{
         {20, 0},
         {9, 1},
         {2, 1},
@@ -137,5 +137,39 @@ namespace GameData {
         {2, -1},
         {9, -1},
         {20, 0}
+    };
+
+    std::vector<errera::vec2> enemyMisslePoints{
+        { 8, 0 },
+        { 7, 3 },
+        { 6, 5 },
+        { 4, 7 },
+        { 1, 8 },
+        { -3, 6 },
+        { -7, 3 },
+        { -10, 0 },
+        { -7, -3 },
+        { -3, -6 },
+        { 1, -8 },
+        { 4, -7 },
+        { 6, -5 },
+        { 7, -3 },
+        { 8, 0 }
+    };
+
+    std::vector<errera::vec2> ringPoints{
+        { 8, 0 },
+        { 7, 3 },
+        { 3, 7 },
+        { 0, 8 },
+        { -3, 7 },
+        { -7, 3 },
+        { -8, 0 },
+        { -7, -3 },
+        { -3, -7 },
+        { 0, -8 },
+        { 3, -7 },
+        { 7, -3 },
+        { 8, 0 }
     };
 }
